@@ -1,0 +1,51 @@
+version: '3'
+
+services:
+  football-results:
+    image: "football-results:latest"
+    depends_on:
+      - "graphite"
+    ports:
+      - "8081"
+    environment:
+     - SERVICE_PORTS=8081
+    networks:
+      - web
+    deploy:
+      replicas: 3
+      update_config:
+        parallelism: 3
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+        window: 120s
+
+  proxy:
+    image: dockercloud/haproxy
+    depends_on:
+      - "football-results"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 8080:80
+    networks:
+      - web
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+
+  graphite:
+    image: "graphiteapp/graphite-statsd"
+    ports:
+      - 8082:80
+      - 2003-2004:2003-2004
+      - 2023-2024:2023-2024
+      - 8125:8125/udp
+      - 8126:8126
+    networks:
+      - web
+
+networks:
+  web:
+    driver: overlay

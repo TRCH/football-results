@@ -23,7 +23,10 @@ defmodule FootballResults.MixProject do
   defp deps do
     [
       {:plug_cowboy, "~> 2.0"},
-      {:poison, "~> 4.0"}
+      {:poison, "~> 4.0"},
+      {:exprotobuf, "~> 1.2"},
+      {:distillery, "~> 2.0"},
+      {:folsomite, "~> 1.2"}
     ]
   end
 end

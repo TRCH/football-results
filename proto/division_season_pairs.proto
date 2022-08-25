@@ -1,0 +1,8 @@
+message DivisionSeasonPair {
+  required string division = 1;
+  required string season = 2;
+}
+
+message DivisionSeasonPairList {
+  repeated DivisionSeasonPair division_season_pairs = 1;
+}
